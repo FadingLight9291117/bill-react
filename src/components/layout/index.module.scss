@@ -1,0 +1,24 @@
+.container {
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+
+  .nav {
+    display: flex;
+    flex-direction: row;
+  }
+
+  .main {
+    display: flex;
+    flex: 1 1;
+    flex-direction: column;
+    .header {
+    }
+    .content {
+      flex: 1 1;
+      padding: 10px;
+    }
+    .footer {
+    }
+  }
+}

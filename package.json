@@ -1,0 +1,39 @@
+{
+  "name": "bill-react-vite",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^4.7.0",
+    "@bytemd/plugin-gfm": "^1.17.2",
+    "@bytemd/plugin-highlight": "^1.17.2",
+    "@bytemd/react": "^1.17.2",
+    "@nextui-org/react": "^1.0.0-beta.9",
+    "antd": "^4.22.8",
+    "axios": "^0.27.2",
+    "dayjs": "^1.11.4",
+    "echarts": "^5.3.3",
+    "mobx": "^6.6.1",
+    "mobx-react-lite": "^3.4.0",
+    "ramda": "^0.28.0",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.3.0",
+    "sass": "^1.54.2"
+  },
+  "devDependencies": {
+    "@types/axios": "^0.14.0",
+    "@types/echarts": "^4.9.16",
+    "@types/ramda": "^0.28.15",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/react-router-dom": "^5.3.3",
+    "@vitejs/plugin-react": "^2.0.0",
+    "vite": "^3.0.0"
+  }
+}
