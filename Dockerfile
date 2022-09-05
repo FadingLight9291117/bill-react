@@ -1,7 +1,9 @@
 FROM nginx:alpine
 
-WORKDIR /app
 
-COPY ./dist/* /usr/share/nginx/html
+COPY ./dist/ /usr/share/nginx/html
 
-EXPOSE 3000
+RUN rm /etc/nginx/conf.d/default.conf
+
+COPY default.conf.template /etc/nginx/templates/
+

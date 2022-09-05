@@ -31,7 +31,6 @@ function App() {
                         <Route path={"/chat"} element={<Chat/>}/>
                         <Route path={"/editor"} element={<MdEditor/>}/>
                         <Route path={'/login'} element={<Login/>}/>
-                        <Route path={'/*'} element={<NotFound/>}/>
                     </Routes>
                 </Layout>
             </BillContext.Provider>

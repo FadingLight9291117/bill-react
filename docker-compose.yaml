@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  proxy:
+    image: registry.cn-hangzhou.aliyuncs.com/fadinglight/bill-react
+    container_name: bill-react
+    restart: always
+    ports:
+      - "3000:80"
+    environment:
+      - NGINX_HOST=bill-react
+      - NGINX_PORT=80
+      - NGINX_API_PROXY=http://www.fadinglight.cn:8080/

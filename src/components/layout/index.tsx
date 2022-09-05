@@ -1,6 +1,6 @@
 import styles from './index.module.scss'
-import {NavLink, useLocation, useRoutes} from "react-router-dom";
-import React, {ReactElement, useState} from 'react';
+import { NavLink, useLocation, useRoutes } from "react-router-dom";
+import React, { ReactElement, useMemo, useState } from 'react';
 import {
     Menu,
     MenuTheme,
@@ -19,19 +19,18 @@ interface IProps {
 }
 
 export default function Layout(props: IProps) {
-    const {children, home} = props
+    const { children, home } = props
 
     const items = [
-        {label: <NavLink to={"/home"}>Home</NavLink>, key: '/home', icon: <HomeOutlined/>},
-        {label: <NavLink to={"/record"}>Record</NavLink>, key: '/record', icon: <FormOutlined/>},
-        {label: <NavLink to={"/login"}>Login</NavLink>, key: '/login', icon: <LoginOutlined/>},
-        {label: <NavLink to={"/chat"}>Chat</NavLink>, key: '/chat', icon: <WechatOutlined/>},
-        {label: <NavLink to={"/editor"}>Editor</NavLink>, key: '/editor', icon: <EditOutlined/>},
+        { label: <NavLink to={"/home"}>Home</NavLink>, key: '/home', icon: <HomeOutlined /> },
+        { label: <NavLink to={"/record"}>Record</NavLink>, key: '/record', icon: <FormOutlined /> },
+        { label: <NavLink to={"/login"}>Login</NavLink>, key: '/login', icon: <LoginOutlined /> },
+        { label: <NavLink to={"/chat"}>Chat</NavLink>, key: '/chat', icon: <WechatOutlined /> },
+        { label: <NavLink to={"/editor"}>Editor</NavLink>, key: '/editor', icon: <EditOutlined /> },
     ]
 
 
     const SiderMenu = (sprops: { theme?: MenuTheme }) => {
-        const location = useLocation()
 
         const siderTitleCSS: React.CSSProperties = {
             color: "white",
@@ -39,6 +38,12 @@ export default function Layout(props: IProps) {
             paddingInline: "10px",
         }
         const [collapsed, setCollapsed] = useState(false)
+
+        const location = useLocation()
+        const selectedKey = useMemo(() => {
+            return location.pathname === "/" ? "/home" : location.pathname
+        }, [location.pathname])
+
         return (
             <AntLayout.Sider
                 collapsible
@@ -51,7 +56,7 @@ export default function Layout(props: IProps) {
                     items={items}
                     theme={sprops.theme}
                     mode="inline"
-                    defaultSelectedKeys={[location.pathname]}
+                    defaultSelectedKeys={[selectedKey]}
                 />
             </AntLayout.Sider>
         )
@@ -60,7 +65,7 @@ export default function Layout(props: IProps) {
     return (
         <div className={styles.container}>
             <nav className={styles.nav}>
-                {home && <SiderMenu theme='dark'/>}
+                {home && <SiderMenu theme='dark' />}
             </nav>
             <main className={styles.main}>
                 <header></header>
