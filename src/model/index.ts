@@ -1,3 +1,5 @@
+import * as dayjs from 'dayjs'
+
 export enum BillType {
     consume = 0,
     income,
@@ -17,7 +19,7 @@ export interface IBill {
 export function EmptyBill(): IBill {
     const now = new Date();
     return {
-        date: `${now.getFullYear()}-${now.getMonth() + 1}-${now.getDate()}`,
+        date: dayjs().format("YYYY-MM-DD"),
         money: 0,
         type: BillType.consume,
         cls: "",
