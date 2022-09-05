@@ -137,7 +137,7 @@ function Record() {
                         type="primary"
                         onKeyUp={e => e.key === "Tab"
                             && clsRef.current!.focus()
-                    }
+                        }
                         onClick={submit}
                     >提交</Button>
                 </Space>
