@@ -1,7 +1,7 @@
-import { makeAutoObservable, runInAction } from "mobx";
-import { createContext } from "react";
-import { getBills } from "../api/bills";
-import { IBill } from "../model";
+import {makeAutoObservable, runInAction} from "mobx";
+import {createContext} from "react";
+import {createBill, getBills, getClass} from "../api/bills";
+import {IBill} from "../model";
 import * as R from "ramda"
 
 /**
@@ -9,9 +9,16 @@ import * as R from "ramda"
  */
 export class Bill {
     bills: IBill[] = [];
+    // _cls2label: IClass = {consume: new Map<string, string[]>(), income: []}
+    _cls2label: { consume: Record<string, string[]>, income: [] } = {consume: {}, income: []}
 
     constructor() {
         makeAutoObservable(this)
+        this.fetchClass().then()
+    }
+
+    get cls2label() {
+        return this._cls2label
     }
 
     get listAllByDate() {
@@ -43,14 +50,25 @@ export class Bill {
     }
 
 
-    add(bill: IBill) {
-        this.bills.push(bill);
+    async add(bill: IBill) {
+        const {id} = await createBill(bill)
+        bill.id = id
+        runInAction(() => {
+            this.bills.push(bill);
+        })
     }
 
     async fetch(year: number, month: number) {
         const data = await getBills(year, month)
         runInAction(() => {
             this.bills = data
+        })
+    }
+
+    async fetchClass() {
+        const cls2label = await getClass()
+        runInAction(() => {
+            this._cls2label = cls2label
         })
     }
 }

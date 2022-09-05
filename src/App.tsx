@@ -8,6 +8,7 @@ import {MdEditor} from './components/editor'
 import NotFound from './pages/NotFound'
 import {Bill, BillContext} from "./store";
 import './App.css'
+import Record from "./pages/Record/Record";
 
 function App() {
     const billStore = new Bill()
@@ -26,6 +27,7 @@ function App() {
                     <Routes>
                         <Route path={"/"} element={<Home/>}/>
                         <Route path={"/home"} element={<Home/>}/>
+                        <Route path={"/record"} element={<Record/>}/>
                         <Route path={"/chat"} element={<Chat/>}/>
                         <Route path={"/editor"} element={<MdEditor/>}/>
                         <Route path={'/login'} element={<Login/>}/>

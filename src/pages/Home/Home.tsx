@@ -1,15 +1,14 @@
 import styles from "./Home.module.scss"
 import * as R from 'ramda'
-import { IBill } from "../../model"
+import {IBill} from "../../model"
 import Bar from "../../components/charts/bar"
-import { useContext, useEffect, useState } from "react";
-import { BillContext } from "../../store";
-import { observer } from "mobx-react-lite";
+import {useContext, useEffect, useState} from "react";
+import {BillContext} from "../../store";
+import {observer} from "mobx-react-lite";
 import Pie from "../../components/charts/pie";
-import { Card, ConfigProvider, DatePicker } from "antd";
+import {Card, DatePicker} from "antd";
 import moment from 'moment';
 import 'moment/locale/zh-cn';
-import locale from 'antd/es/locale/zh_CN';
 
 const Home = () => {
     const billStore = useContext(BillContext)
@@ -29,7 +28,7 @@ const Home = () => {
     const [month, setMonth] = useState(now.getMonth() + 1)
 
     useEffect(() => {
-        billStore.fetch(year, month)
+        billStore.fetch(year, month).then()
     }, [year, month])
 
     const changeDate = (date: moment.Moment | null, datestring: string) => {
@@ -51,11 +50,11 @@ const Home = () => {
                     value={moment(`${year}-${month}`, 'YYYY-MM')}
                     onChange={changeDate}
                 />
-                <TotalMoney />
+                <TotalMoney/>
             </div>
-            <Bar data={transformer(billStore.listAllByDate)} />
-            <Pie data={transformer(billStore.listAllByClass)} />
-        </div >
+            <Bar data={transformer(billStore.listAllByDate)}/>
+            <Pie data={transformer(billStore.listAllByClass)}/>
+        </div>
     )
 }
 
