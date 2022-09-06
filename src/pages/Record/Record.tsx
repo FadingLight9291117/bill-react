@@ -100,7 +100,7 @@ function Record() {
         bill.money = Number(money)
         bill.options = options
         const checkBill = () => {
-            return bill.cls !== '' && bill.label !== '' && bill.money !== 0
+            return bill.cls !== '' && bill.label !== '' && bill.money > 0
         }
         const reset = () => {
             setCls("")
@@ -195,7 +195,7 @@ function Record() {
                         placeholder="money"
                         prefix="￥"
                         value={money}
-                        onChange={setMoney}
+                        onChange={value => Number(value) < 0 ? setMoney('') : setMoney(value)}
                         onKeyDown={e => e.key === "Enter" && submit()}
                     />
                     <Input.TextArea
@@ -221,6 +221,7 @@ function Record() {
                 <Table
                     dataSource={datasource}
                     columns={columns}
+                    size="small"
                 />
                 <Button
                     icon={<CloudUploadOutlined />}
