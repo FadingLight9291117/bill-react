@@ -6,15 +6,21 @@ import {
     message,
     Radio,
     Select,
-    Space
+    Space, Table
 } from "antd";
+import {
+    ArrowDownOutlined,
+    CloudUploadOutlined, DeleteOutlined,
+} from "@ant-design/icons";
 import {useContext, useEffect, useRef, useState} from "react";
-import {BillType, EmptyBill} from "../../model";
+import {BillType, EmptyBill, IBill} from "../../model";
 import moment from "moment/moment";
 import {BillContext} from "../../store";
 import {observer} from "mobx-react-lite";
 import styles from "./Record.module.scss"
 import {BaseSelectRef} from "rc-select/lib/BaseSelect";
+import {createBill} from "../../api/bills";
+
 
 function Record() {
 
@@ -35,12 +41,56 @@ function Record() {
     }, [clsRef])
 
 
+    // table
+    const columns = [
+        {
+            title: "日期",
+            dataIndex: "date",
+            key: "date",
+        },
+        {
+            title: "类别",
+            dataIndex: "cls",
+            key: "cls",
+        },
+        {
+            title: "标签",
+            dataIndex: "label",
+            key: "label",
+        },
+        {
+            title: "金额",
+            dataIndex: "money",
+            key: "money",
+        },
+        {
+            title: "备注",
+            dataIndex: "options",
+            key: "options",
+        },
+        {
+            title: "操作",
+            key: 'action',
+            render: (_: any, record: any) => (
+                <Space>
+                    <Button
+                        type="primary"
+                        danger
+                        icon={<DeleteOutlined/>}
+                        onClick={() => setDataSource(datasource.filter(bill => bill !== record))}
+                    />
+                </Space>
+            ),
+        },
+    ]
+    const [datasource, setDataSource] = useState<IBill[]>([])
+
     const typeOpt = [
         {label: '支出', value: BillType.consume},
         {label: '收入', value: BillType.income},
     ];
 
-
+    // 提交到表格
     const submit = async () => {
         const bill = EmptyBill()
         bill.type = billType
@@ -63,12 +113,32 @@ function Record() {
         }
 
         if (checkBill()) {
-            await billStore.add(bill)
+            Reflect.set(bill, "key", crypto.randomUUID())
+            setDataSource([bill, ...datasource])
             reset()
         } else {
             message.error("请输入完整")
         }
     }
+
+    // 上传云端
+    const [uploadLoading, setUploadLoading] = useState(false)
+    const upload = async () => {
+        setUploadLoading(true)
+        const failures = []
+        for (let bill of datasource) {
+            try {
+                const {id} = await createBill(bill)
+                if (!id) failures.push(bill)
+            } catch (e) {
+                failures.push(bill)
+            }
+        }
+        setDataSource(failures)
+        setUploadLoading(false)
+    }
+
+
     return (
         <div className={styles.record}>
             <div className={styles.new}>
@@ -81,6 +151,7 @@ function Record() {
                         onChange={e => setBillType(e.target.value)}
                     />
                     <DatePicker
+                        allowClear={false}
                         value={moment(date, 'YYYY-MM-DD')}
                         onChange={(_, dateStr) => setDate(dateStr)}
                     />
@@ -117,6 +188,7 @@ function Record() {
                             cls2label.consume[cls]
                                 .map(la => <Select.Option key={la} value={la}>{la}</Select.Option>)
                         }
+                        <Select.Option key={"other"} value={"其他"}>{"其他"}</Select.Option>)
                     </Select>
                     <InputNumber
                         style={{width: 120}}
@@ -135,14 +207,27 @@ function Record() {
                     />
                     <Button
                         type="primary"
+                        icon={<ArrowDownOutlined/>}
                         onKeyUp={e => e.key === "Tab"
                             && clsRef.current!.focus()
                         }
                         onClick={submit}
-                    >提交</Button>
+                    >
+                        提交
+                    </Button>
                 </Space>
             </div>
-            <div className={styles.table}></div>
+            <div className={styles.table}>
+                <Table dataSource={datasource} columns={columns}></Table>
+                <Button
+                    icon={<CloudUploadOutlined/>}
+                    type="primary"
+                    loading={uploadLoading}
+                    onClick={upload}
+                >
+                    全部上传
+                </Button>
+            </div>
         </div>
     )
 }

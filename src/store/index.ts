@@ -8,25 +8,28 @@ import * as R from "ramda"
  * 仅存储一个月的数据
  */
 export class Bill {
-    bills: IBill[] = [];
+    private _bills: IBill[] = [];
     // _cls2label: IClass = {consume: new Map<string, string[]>(), income: []}
-    _cls2label: { consume: Record<string, string[]>, income: [] } = {consume: {}, income: []}
+    private _cls2label: { consume: Record<string, string[]>, income: [] } = {consume: {}, income: []}
 
     constructor() {
         makeAutoObservable(this)
         this.fetchClass().then()
     }
 
+    get bills() {
+        return this._bills
+    }
     get cls2label() {
         return this._cls2label
     }
 
     get listAllByDate() {
-        return R.groupBy((bill: IBill) => bill.date)(this.bills)
+        return R.groupBy((bill: IBill) => bill.date)(this._bills)
     }
 
     get listAllByClass() {
-        return R.groupBy((bill: IBill) => bill.cls)(this.bills)
+        return R.groupBy((bill: IBill) => bill.cls)(this._bills)
     }
 
     get listDailyMoney() {
@@ -40,7 +43,7 @@ export class Bill {
             R.sum,
             R.map((bill: IBill) => bill.money)
         )
-        return functions(this.bills)
+        return functions(this._bills)
     }
 
     get meanMoneyByDate() {
@@ -54,14 +57,14 @@ export class Bill {
         const {id} = await createBill(bill)
         bill.id = id
         runInAction(() => {
-            this.bills.push(bill);
+            this._bills.push(bill);
         })
     }
 
     async fetch(year: number, month: number) {
         const data = await getBills(year, month)
         runInAction(() => {
-            this.bills = data
+            this._bills = data
         })
     }
 
