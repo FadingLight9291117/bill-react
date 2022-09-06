@@ -12,14 +12,14 @@ import {
     ArrowDownOutlined,
     CloudUploadOutlined, DeleteOutlined,
 } from "@ant-design/icons";
-import {useContext, useEffect, useRef, useState} from "react";
-import {BillType, EmptyBill, IBill} from "../../model";
+import { useContext, useEffect, useRef, useState } from "react";
+import { BillType, EmptyBill, IBill } from "../../model";
 import moment from "moment/moment";
-import {BillContext} from "../../store";
-import {observer} from "mobx-react-lite";
+import { BillContext } from "../../store";
+import { observer } from "mobx-react-lite";
 import styles from "./Record.module.scss"
-import {BaseSelectRef} from "rc-select/lib/BaseSelect";
-import {createBill} from "../../api/bills";
+import { BaseSelectRef } from "rc-select/lib/BaseSelect";
+import { createBill } from "../../api/bills";
 
 
 function Record() {
@@ -76,7 +76,7 @@ function Record() {
                     <Button
                         type="primary"
                         danger
-                        icon={<DeleteOutlined/>}
+                        icon={<DeleteOutlined />}
                         onClick={() => setDataSource(datasource.filter(bill => bill !== record))}
                     />
                 </Space>
@@ -86,8 +86,8 @@ function Record() {
     const [datasource, setDataSource] = useState<IBill[]>([])
 
     const typeOpt = [
-        {label: '支出', value: BillType.consume},
-        {label: '收入', value: BillType.income},
+        { label: '支出', value: BillType.consume },
+        { label: '收入', value: BillType.income },
     ];
 
     // 提交到表格
@@ -113,7 +113,7 @@ function Record() {
         }
 
         if (checkBill()) {
-            Reflect.set(bill, "key", crypto.randomUUID())
+            Reflect.set(bill, "key", Date.now().toString() + Math.random().toString())
             setDataSource([bill, ...datasource])
             reset()
         } else {
@@ -128,7 +128,7 @@ function Record() {
         const failures = []
         for (let bill of datasource) {
             try {
-                const {id} = await createBill(bill)
+                const { id } = await createBill(bill)
                 if (!id) failures.push(bill)
             } catch (e) {
                 failures.push(bill)
@@ -157,7 +157,7 @@ function Record() {
                     />
                     <Select
                         ref={clsRef}
-                        style={{width: 120}}
+                        style={{ width: 120 }}
                         showSearch
                         placeholder="类别"
                         optionFilterProp="children"
@@ -175,7 +175,7 @@ function Record() {
                         }
                     </Select>
                     <Select
-                        style={{width: 120}}
+                        style={{ width: 120 }}
                         showSearch
                         placeholder="标签"
                         optionFilterProp="children"
@@ -191,7 +191,7 @@ function Record() {
                         <Select.Option key={"other"} value={"其他"}>{"其他"}</Select.Option>)
                     </Select>
                     <InputNumber
-                        style={{width: 120}}
+                        style={{ width: 120 }}
                         placeholder="money"
                         prefix="￥"
                         value={money}
@@ -207,7 +207,7 @@ function Record() {
                     />
                     <Button
                         type="primary"
-                        icon={<ArrowDownOutlined/>}
+                        icon={<ArrowDownOutlined />}
                         onKeyUp={e => e.key === "Tab"
                             && clsRef.current!.focus()
                         }
@@ -218,9 +218,12 @@ function Record() {
                 </Space>
             </div>
             <div className={styles.table}>
-                <Table dataSource={datasource} columns={columns}></Table>
+                <Table
+                    dataSource={datasource}
+                    columns={columns}
+                />
                 <Button
-                    icon={<CloudUploadOutlined/>}
+                    icon={<CloudUploadOutlined />}
                     type="primary"
                     loading={uploadLoading}
                     onClick={upload}
