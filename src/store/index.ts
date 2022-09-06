@@ -1,7 +1,7 @@
 import {makeAutoObservable, runInAction} from "mobx";
 import {createContext} from "react";
 import {createBill, getBills, getClass} from "../api/bills";
-import {IBill} from "../model";
+import {BillType, IBill} from "../model";
 import * as R from "ramda"
 
 /**
@@ -20,20 +20,31 @@ export class Bill {
     get bills() {
         return this._bills
     }
+
     get cls2label() {
         return this._cls2label
     }
 
-    get listAllByDate() {
-        return R.groupBy((bill: IBill) => bill.date)(this._bills)
+    groupByDate(type?: BillType) {
+        const classFun = R.filter((bill: IBill) => R.of(bill.type).length === 0 || bill.type === type)
+        const functions = R.compose(
+            R.groupBy((bill: IBill) => bill.date),
+            classFun,
+        )
+        return functions(this._bills)
     }
 
-    get listAllByClass() {
-        return R.groupBy((bill: IBill) => bill.cls)(this._bills)
+    groupByClass(type?: BillType) {
+        const classFun = R.filter((bill: IBill) => R.of(bill.type).length === 0 || bill.type === type)
+        const functions = R.compose(
+            R.groupBy((bill: IBill) => bill.cls),
+            classFun,
+        )
+        return functions(this._bills)
     }
 
     get listDailyMoney() {
-        return this.listAllByDate
+        return this.groupByDate
     }
 
     get totalMoney() {
@@ -47,7 +58,7 @@ export class Bill {
     }
 
     get meanMoneyByDate() {
-        const days = Reflect.ownKeys(this.listAllByDate).length
+        const days = Reflect.ownKeys(this.groupByDate).length
         if (days === 0) return 0
         return this.totalMoney / days
     }

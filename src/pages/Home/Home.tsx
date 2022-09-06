@@ -1,12 +1,12 @@
 import styles from "./Home.module.scss"
 import * as R from 'ramda'
-import {IBill} from "../../model"
+import {BillType, IBill} from "../../model"
 import Bar from "../../components/charts/bar"
 import {useContext, useEffect, useState} from "react";
 import {BillContext} from "../../store";
 import {observer} from "mobx-react-lite";
 import Pie from "../../components/charts/pie";
-import {Card, DatePicker} from "antd";
+import {Card, DatePicker, Radio, Space} from "antd";
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 
@@ -37,6 +37,12 @@ const Home = () => {
         setMonth(d.getMonth() + 1)
     }
 
+    const typeOpt = [
+        {label: '支出', value: BillType.consume},
+        {label: '收入', value: BillType.income},
+    ];
+    const [billType, setBillType] = useState(BillType.consume)
+
     const TotalMoney = () => <Card>
         {"总金额"}
         ￥{billStore.totalMoney}
@@ -45,15 +51,24 @@ const Home = () => {
     return (
         <div className={styles.home}>
             <div className={styles.total}>
-                <DatePicker
-                    picker="month"
-                    value={moment(`${year}-${month}`, 'YYYY-MM')}
-                    onChange={changeDate}
-                />
-                <TotalMoney/>
+                <Space align="start">
+                    <DatePicker
+                        picker="month"
+                        value={moment(`${year}-${month}`, 'YYYY-MM')}
+                        onChange={changeDate}
+                    />
+                    <Radio.Group
+                        options={typeOpt}
+                        optionType="button"
+                        buttonStyle="solid"
+                        value={billType}
+                        onChange={e => setBillType(e.target.value)}
+                    />
+                    <TotalMoney/>
+                </Space>
             </div>
-            <Bar data={transformer(billStore.listAllByDate)}/>
-            <Pie data={transformer(billStore.listAllByClass)}/>
+            <Bar data={transformer(billStore.groupByDate(billType))}/>
+            <Pie data={transformer(billStore.groupByClass(billType))}/>
         </div>
     )
 }

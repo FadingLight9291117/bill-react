@@ -1,25 +1,13 @@
-import {
-    Button,
-    DatePicker,
-    Input,
-    InputNumber,
-    message,
-    Radio,
-    Select,
-    Space, Table
-} from "antd";
-import {
-    ArrowDownOutlined,
-    CloudUploadOutlined, DeleteOutlined,
-} from "@ant-design/icons";
-import { useContext, useEffect, useRef, useState } from "react";
-import { BillType, EmptyBill, IBill } from "../../model";
+import {Button, DatePicker, Input, InputNumber, message, Radio, Select, Space, Table, Tag} from "antd";
+import {ArrowDownOutlined, CloudUploadOutlined, DeleteOutlined,} from "@ant-design/icons";
+import {useCallback, useContext, useEffect, useMemo, useRef, useState} from "react";
+import {BillType, EmptyBill, IBill} from "../../model";
 import moment from "moment/moment";
-import { BillContext } from "../../store";
-import { observer } from "mobx-react-lite";
+import {BillContext} from "../../store";
+import {observer} from "mobx-react-lite";
 import styles from "./Record.module.scss"
-import { BaseSelectRef } from "rc-select/lib/BaseSelect";
-import { createBill } from "../../api/bills";
+import {BaseSelectRef} from "rc-select/lib/BaseSelect";
+import {createBill} from "../../api/bills";
 
 
 function Record() {
@@ -60,8 +48,13 @@ function Record() {
         },
         {
             title: "金额",
-            dataIndex: "money",
             key: "money",
+            render: (_: any, record: IBill) => {
+                const isConsume = record.type === BillType.consume
+                const color = isConsume ? "red" : "green"
+                const flag = isConsume ? "-" : "+"
+                return <Tag color={color}>{flag}{record.money}</Tag>
+            }
         },
         {
             title: "备注",
@@ -76,7 +69,7 @@ function Record() {
                     <Button
                         type="primary"
                         danger
-                        icon={<DeleteOutlined />}
+                        icon={<DeleteOutlined/>}
                         onClick={() => setDataSource(datasource.filter(bill => bill !== record))}
                     />
                 </Space>
@@ -86,8 +79,8 @@ function Record() {
     const [datasource, setDataSource] = useState<IBill[]>([])
 
     const typeOpt = [
-        { label: '支出', value: BillType.consume },
-        { label: '收入', value: BillType.income },
+        {label: '支出', value: BillType.consume},
+        {label: '收入', value: BillType.income},
     ];
 
     // 提交到表格
@@ -100,7 +93,7 @@ function Record() {
         bill.money = Number(money)
         bill.options = options
         const checkBill = () => {
-            return bill.cls !== '' && bill.label !== '' && bill.money > 0
+            return bill.cls !== '' && (billType === BillType.income || bill.label !== '') && bill.money > 0
         }
         const reset = () => {
             setCls("")
@@ -111,7 +104,6 @@ function Record() {
                 clsRef.current.focus()
             }
         }
-
         if (checkBill()) {
             Reflect.set(bill, "key", Date.now().toString() + Math.random().toString())
             setDataSource([bill, ...datasource])
@@ -128,7 +120,7 @@ function Record() {
         const failures = []
         for (let bill of datasource) {
             try {
-                const { id } = await createBill(bill)
+                const {id} = await createBill(bill)
                 if (!id) failures.push(bill)
             } catch (e) {
                 failures.push(bill)
@@ -138,12 +130,22 @@ function Record() {
         setUploadLoading(false)
     }
 
+    let classData: string[]
+    switch (billType) {
+        case BillType.consume:
+            classData = Object.keys(cls2label.consume)
+            break
+        case BillType.income:
+            classData = cls2label.income
+            break
+    }
 
     return (
         <div className={styles.record}>
             <div className={styles.new}>
                 <Space align="start">
                     <Radio.Group
+                        style={{width: 120}}
                         options={typeOpt}
                         optionType="button"
                         buttonStyle="solid"
@@ -151,13 +153,14 @@ function Record() {
                         onChange={e => setBillType(e.target.value)}
                     />
                     <DatePicker
+                        style={{width: 120}}
                         allowClear={false}
                         value={moment(date, 'YYYY-MM-DD')}
                         onChange={(_, dateStr) => setDate(dateStr)}
                     />
                     <Select
                         ref={clsRef}
-                        style={{ width: 120 }}
+                        style={{width: 120}}
                         showSearch
                         placeholder="类别"
                         optionFilterProp="children"
@@ -167,31 +170,33 @@ function Record() {
                         value={cls === "" ? null : cls}
                         onChange={c => {
                             setCls(c)
-                            setLabel(cls2label.consume[c][0])
+                            if (billType === BillType.consume) setLabel(cls2label.consume[c][0])
                         }}
                     >
-                        {Object.keys(cls2label.consume)
-                            .map(c => <Select.Option key={c} value={c}>{c}</Select.Option>)
+                        {
+                            classData.map(c => <Select.Option key={c} value={c}>{c}</Select.Option>)
                         }
                     </Select>
-                    <Select
-                        style={{ width: 120 }}
-                        showSearch
-                        placeholder="标签"
-                        optionFilterProp="children"
-                        filterOption={(input, option) =>
-                            (option!.children as unknown as string).toLowerCase().includes(input.toLowerCase())
-                        }
-                        value={label === "" ? null : label}
-                        onChange={setLabel}>
-                        {cls !== "" &&
-                            cls2label.consume[cls]
-                                .map(la => <Select.Option key={la} value={la}>{la}</Select.Option>)
-                        }
-                        <Select.Option key={"other"} value={"其他"}>{"其他"}</Select.Option>)
-                    </Select>
+                    {billType === BillType.consume && (
+                        <Select
+                            style={{width: 120}}
+                            showSearch
+                            placeholder="标签"
+                            optionFilterProp="children"
+                            filterOption={(input, option) =>
+                                (option!.children as unknown as string).toLowerCase().includes(input.toLowerCase())
+                            }
+                            value={label === "" ? null : label}
+                            onChange={setLabel}>
+                            {cls !== "" &&
+                                cls2label.consume[cls]
+                                    .map(la => <Select.Option key={la} value={la}>{la}</Select.Option>)
+                            }
+                            <Select.Option key={"other"} value={"其他"}>{"其他"}</Select.Option>)
+                        </Select>
+                    )}
                     <InputNumber
-                        style={{ width: 120 }}
+                        style={{width: 120}}
                         placeholder="money"
                         prefix="￥"
                         value={money}
@@ -199,18 +204,17 @@ function Record() {
                         onKeyDown={e => e.key === "Enter" && submit()}
                     />
                     <Input.TextArea
-                        value={options}
-                        onChange={value => setOptions(value.target.value)}
+                        style={{width: 180}}
                         rows={1}
                         placeholder="备注"
+                        value={options}
+                        onChange={value => setOptions(value.target.value)}
                         onKeyDown={e => e.key === "Enter" && submit()}
                     />
                     <Button
                         type="primary"
-                        icon={<ArrowDownOutlined />}
-                        onKeyUp={e => e.key === "Tab"
-                            && clsRef.current!.focus()
-                        }
+                        icon={<ArrowDownOutlined/>}
+                        onKeyUp={e => e.key === "Tab" && clsRef.current!.focus()}
                         onClick={submit}
                     >
                         提交
@@ -224,7 +228,7 @@ function Record() {
                     size="small"
                 />
                 <Button
-                    icon={<CloudUploadOutlined />}
+                    icon={<CloudUploadOutlined/>}
                     type="primary"
                     loading={uploadLoading}
                     onClick={upload}
