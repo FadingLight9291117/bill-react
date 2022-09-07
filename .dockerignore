@@ -1,0 +1,16 @@
+# ide
+.idea
+
+.vscode
+
+# git
+.git
+
+.gitignore
+
+script
+
+README.md
+
+docker-compose.yaml
+Dockerfile
