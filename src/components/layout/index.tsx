@@ -22,11 +22,8 @@ export default function Layout(props: IProps) {
     const { children, home } = props
 
     const items = [
-        { label: <NavLink to={"/home"}>Home</NavLink>, key: '/home', icon: <HomeOutlined /> },
-        { label: <NavLink to={"/record"}>Record</NavLink>, key: '/record', icon: <FormOutlined /> },
-        { label: <NavLink to={"/login"}>Login</NavLink>, key: '/login', icon: <LoginOutlined /> },
-        { label: <NavLink to={"/chat"}>Chat</NavLink>, key: '/chat', icon: <WechatOutlined /> },
-        { label: <NavLink to={"/editor"}>Editor</NavLink>, key: '/editor', icon: <EditOutlined /> },
+        { label: <NavLink to={"/home"}>统计</NavLink>, key: '/home', icon: <HomeOutlined /> },
+        { label: <NavLink to={"/record"}>记账</NavLink>, key: '/record', icon: <FormOutlined /> },
     ]
 
 

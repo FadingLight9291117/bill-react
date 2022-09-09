@@ -2,9 +2,6 @@ import Layout from './components/layout'
 import {Routes, Route} from 'react-router-dom'
 import {useEffect} from "react";
 import Home from './pages/Home/Home'
-import Login from './pages/Login'
-import Chat from './components/chat'
-import {MdEditor} from './components/editor'
 import NotFound from './pages/NotFound'
 import {Bill, BillContext} from "./store";
 import './App.css'
@@ -28,9 +25,7 @@ function App() {
                         <Route path={"/"} element={<Home/>}/>
                         <Route path={"/home"} element={<Home/>}/>
                         <Route path={"/record"} element={<Record/>}/>
-                        <Route path={"/chat"} element={<Chat/>}/>
-                        <Route path={"/editor"} element={<MdEditor/>}/>
-                        <Route path={'/login'} element={<Login/>}/>
+                        <Route path={"/*"} element={<NotFound/>}/>
                     </Routes>
                 </Layout>
             </BillContext.Provider>

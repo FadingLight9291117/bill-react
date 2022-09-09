@@ -1,7 +1,7 @@
-import {makeAutoObservable, runInAction} from "mobx";
-import {createContext} from "react";
-import {createBill, getBills, getClass} from "../api/bills";
-import {BillType, IBill} from "../model";
+import { makeAutoObservable, runInAction } from "mobx";
+import { createContext } from "react";
+import { createBill, getBills, getClass } from "../api/bills";
+import { BillType, IBill } from "../model";
 import * as R from "ramda"
 
 /**
@@ -10,7 +10,7 @@ import * as R from "ramda"
 export class Bill {
     private _bills: IBill[] = [];
     // _cls2label: IClass = {consume: new Map<string, string[]>(), income: []}
-    private _cls2label: { consume: Record<string, string[]>, income: [] } = {consume: {}, income: []}
+    private _cls2label: { consume: Record<string, string[]>, income: [] } = { consume: {}, income: [] }
 
     constructor() {
         makeAutoObservable(this)
@@ -57,6 +57,32 @@ export class Bill {
         return functions(this._bills)
     }
 
+    get consumeMoney() {
+        const functions = R.compose(
+            Number,
+            (s: number) => s.toFixed(2),
+            R.sum,
+            R.map((bill: IBill) => bill.money),
+            R.filter((bill: IBill) => bill.type === BillType.consume),
+        )
+        return functions(this._bills)
+    }
+
+    get incomeMoney() {
+        const functions = R.compose(
+            Number,
+            (s: number) => s.toFixed(2),
+            R.sum,
+            R.map((bill: IBill) => bill.money),
+            R.filter((bill: IBill) => bill.type === BillType.income),
+        )
+        return functions(this._bills)
+    }
+
+    getTotalMoney(type?: BillType) {
+        return !type ? this.totalMoney : type === BillType.income ? this.incomeMoney : this.consumeMoney
+    }
+
     get meanMoneyByDate() {
         const days = Reflect.ownKeys(this.groupByDate).length
         if (days === 0) return 0
@@ -65,7 +91,7 @@ export class Bill {
 
 
     async add(bill: IBill) {
-        const {id} = await createBill(bill)
+        const { id } = await createBill(bill)
         bill.id = id
         runInAction(() => {
             this._bills.push(bill);

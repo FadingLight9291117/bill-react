@@ -43,11 +43,6 @@ const Home = () => {
     ];
     const [billType, setBillType] = useState(BillType.consume)
 
-    const TotalMoney = () => <Card>
-        {"总金额"}
-        ￥{billStore.totalMoney}
-    </Card>
-
     return (
         <div className={styles.home}>
             <div className={styles.total}>
@@ -64,7 +59,10 @@ const Home = () => {
                         value={billType}
                         onChange={e => setBillType(e.target.value)}
                     />
-                    <TotalMoney/>
+                     <Card>
+                        {"总金额"}
+                        ￥{billStore.getTotalMoney(billType)}
+                    </Card>
                 </Space>
             </div>
             <Bar data={transformer(billStore.groupByDate(billType))}/>
@@ -72,6 +70,5 @@ const Home = () => {
         </div>
     )
 }
-
 
 export default observer(Home)
