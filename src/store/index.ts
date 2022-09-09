@@ -80,7 +80,14 @@ export class Bill {
     }
 
     getTotalMoney(type?: BillType) {
-        return !type ? this.totalMoney : type === BillType.income ? this.incomeMoney : this.consumeMoney
+        switch (type) {
+            case BillType.income:
+                return this.incomeMoney
+            case BillType.consume:
+                return this.consumeMoney
+            default:
+                return this.totalMoney
+        }
     }
 
     get meanMoneyByDate() {
