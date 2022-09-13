@@ -3,7 +3,7 @@ import {
     useMemo,
     useEffect
 } from "react"
-import echarts, {ECOption} from '../config';
+import echarts, { ECOption } from '../config';
 import styles from "./index.module.scss"
 
 type PieData = {
@@ -20,7 +20,7 @@ interface IProps {
 
 export default function Pie(props: IProps) {
     // 获取数据
-    const {data, title, subTitle} = props
+    const { data, title, subTitle } = props
 
     const chartRef = useRef<HTMLDivElement>(null)
     // 设置图标配置
@@ -43,16 +43,13 @@ export default function Pie(props: IProps) {
                 {
                     // name: `${year}-${month}`,
                     type: "pie",
-                    data: data.map(item => {
-                        return {
-                            name: item.x,
-                            value: item.y
-                        }
-                    }),
-                    radius: [20, 100],
-                    roseType: "radius",
+                    radius: ['40%', '70%'],
+                    // roseType: "radius",
                     itemStyle: {
-                        borderRadius: 5
+                        borderRadius: 10,
+                        borderColor: '#fff',
+                        borderWidth: 2,
+                        
                     },
                     label: {
                         show: true,
@@ -65,6 +62,12 @@ export default function Pie(props: IProps) {
                             show: true
                         }
                     },
+                    data: data.map(item => {
+                        return {
+                            name: item.x,
+                            value: item.y
+                        }
+                    }),
                 },
             ],
         }
@@ -72,7 +75,7 @@ export default function Pie(props: IProps) {
 
     // 挂载echarts
     const pie = useMemo(() => {
-        return chartRef.current ? echarts.init(chartRef.current, undefined, {renderer: "svg"}) : null
+        return chartRef.current ? echarts.init(chartRef.current, undefined, { renderer: "svg" }) : null
     }, [chartRef.current])
     // 设置pie选项
     useEffect(() => {

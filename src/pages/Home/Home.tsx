@@ -1,26 +1,35 @@
 import styles from "./Home.module.scss"
 import * as R from 'ramda'
-import {BillType, IBill} from "../../model"
+import { BillType, IBill } from "../../model"
 import Bar from "../../components/charts/bar"
-import {useContext, useEffect, useState} from "react";
-import {BillContext} from "../../store";
-import {observer} from "mobx-react-lite";
+import { useContext, useEffect, useState } from "react";
+import { BillContext } from "../../store";
+import { observer } from "mobx-react-lite";
 import Pie from "../../components/charts/pie";
-import {Card, DatePicker, Radio, Space} from "antd";
+import { Card, DatePicker, Radio, Space } from "antd";
 import moment from 'moment';
 import 'moment/locale/zh-cn';
+import dayjs from 'dayjs'
 
 const Home = () => {
     const billStore = useContext(BillContext)
 
     const transformer = (record: Record<string, IBill[]>) => {
-        return R.map((key: string) => {
-            const moneys = record[key].map(bill => bill.money)
-            return {
-                x: key,
-                y: Number(R.sum(moneys).toFixed(2)),
-            }
-        })(R.keys(record))
+        const funcs = R.compose(
+            R.sort((a: { x: string, y: number }, b) => {
+                const date1 = dayjs(a.x).toDate().getTime()
+                const date2 = dayjs(b.x).toDate().getTime()
+
+                return date1 - date2
+            }),
+            R.map((key: string) => {
+                const moneys = record[key].map(bill => bill.money)
+                return {
+                    x: key,
+                    y: Number(R.sum(moneys).toFixed(2)),
+                }
+            }))
+        return funcs(R.keys(record))
     }
 
     const now = new Date();
@@ -38,8 +47,8 @@ const Home = () => {
     }
 
     const typeOpt = [
-        {label: '支出', value: BillType.consume},
-        {label: '收入', value: BillType.income},
+        { label: '支出', value: BillType.consume },
+        { label: '收入', value: BillType.income },
     ];
     const [billType, setBillType] = useState(BillType.consume)
 
@@ -59,14 +68,14 @@ const Home = () => {
                         value={billType}
                         onChange={e => setBillType(e.target.value)}
                     />
-                     <Card>
+                    <Card>
                         {"总金额"}
                         ￥{billStore.getTotalMoney(billType)}
                     </Card>
                 </Space>
             </div>
-            <Bar data={transformer(billStore.groupByDate(billType))}/>
-            <Pie data={transformer(billStore.groupByClass(billType))}/>
+            <Bar data={transformer(billStore.groupByDate(billType))} />
+            <Pie data={transformer(billStore.groupByClass(billType))} />
         </div>
     )
 }

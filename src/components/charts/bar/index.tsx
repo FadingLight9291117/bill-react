@@ -1,10 +1,12 @@
 import {
     useRef,
     useMemo,
-    useEffect
+    useEffect,
+    useCallback
 } from 'react';
 import echarts, { ECOption } from '../config';
 import styles from "./indx.module.scss"
+import dayjs from "dayjs"
 
 type BarData = {
     x: string | number
@@ -21,6 +23,13 @@ export const Bar = (props: IProps) => {
     const { data, title, subTitle } = props;
     // 获取数据
     const chartRef = useRef<HTMLDivElement>(null);
+
+    const colors = useCallback((value: number) => {
+        if (value < 50) { return "#008000" }
+        else if (value < 100) { return "#FFA500" }
+        else { return "#8B0000" }
+    }, [])
+
     const option: ECOption = useMemo(() => {
         return {
             title: {
@@ -30,20 +39,29 @@ export const Bar = (props: IProps) => {
             },
             xAxis: {
                 type: 'category',
-                data: data.map(item => item.x),
+                data: data.map(item => {
+                    return dayjs(item.x).format("MM-DD")
+                }),
             },
             yAxis: {
                 type: "value"
             },
             series: [
                 {
-                    data: data.map(item => item.y),
+                    data: data.map(item => {
+                        return {
+                            value: item.y,
+                            itemStyle: {
+                                color: colors(item.y)
+                            }
+                        }
+                    }),
                     type: "bar",
                     label: {
                         show: true,
                         position: "top",
                         margin: 8
-                    }
+                    },
                 },
             ],
             tooltip: {
