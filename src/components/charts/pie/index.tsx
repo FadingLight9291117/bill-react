@@ -33,15 +33,15 @@ export default function Pie(props: IProps) {
             },
             tooltip: {
                 trigger: 'item',
-                formatter: '{a} <br/>{b} : {c} ({d}%)',
+                formatter: '{b} : ￥{c} ({d}%)',
             },
-            // legend: {
-            //     orient: 'vertical',
-            //     left: 'left',
-            // },
+            legend: {
+                orient: 'vertical',
+                left: 'left'
+            },
             series: [
                 {
-                    name: "金额",
+                    // name: "金额",
                     type: "pie",
                     radius: ['40%', '70%'],
                     // roseType: "radius",
@@ -49,17 +49,17 @@ export default function Pie(props: IProps) {
                         borderRadius: 10,
                         borderColor: '#fff',
                         borderWidth: 2,
-                        
+
                     },
                     label: {
-                        show: true,
+                        show: false,
                         // position: "top",
                         margin: 8,
                         formatter: "{b}: {c}"
                     },
                     emphasis: {
                         label: {
-                            show: true
+                            show: false,
                         }
                     },
                     data: data.map(item => {

@@ -14,6 +14,8 @@ import {
     TitleComponentOption,
     TooltipComponent,
     TooltipComponentOption,
+    LegendComponent,
+    LegendComponentOption,
     GridComponent,
     GridComponentOption,
     // 数据集组件
@@ -34,6 +36,7 @@ export type ECOption = echarts.ComposeOption<
     | PieSeriesOption
     | TitleComponentOption
     | TooltipComponentOption
+    | LegendComponentOption
     | GridComponentOption
     | DatasetComponentOption>;
 
@@ -41,6 +44,7 @@ export type ECOption = echarts.ComposeOption<
 echarts.use([
     TitleComponent,
     TooltipComponent,
+    LegendComponent,
     GridComponent,
     DatasetComponent,
     TransformComponent,

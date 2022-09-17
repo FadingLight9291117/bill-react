@@ -37,33 +37,6 @@ export const Bar = (props: IProps) => {
                 subtext: subTitle ?? "",
                 left: 'center'
             },
-            xAxis: {
-                type: 'category',
-                data: data.map(item => {
-                    return dayjs(item.x).format("MM-DD")
-                }),
-            },
-            yAxis: {
-                type: "value"
-            },
-            series: [
-                {
-                    type: "bar",
-                    label: {
-                        show: true,
-                        position: "top",
-                        margin: 8
-                    }, 
-                    data: data.map(item => {
-                        return {
-                            value: item.y,
-                            itemStyle: {
-                                color: colors(item.y)
-                            }
-                        }
-                    }),
-                },
-            ],
             tooltip: {
                 show: true,
                 trigger: "item",
@@ -80,7 +53,34 @@ export const Bar = (props: IProps) => {
                 },
                 borderWidth: 0,
                 padding: 5
-            }
+            },
+            xAxis: {
+                type: 'category',
+                data: data.map(item => {
+                    return dayjs(item.x).format("MM-DD")
+                }),
+            },
+            yAxis: {
+                type: "value"
+            },
+            series: [
+                {
+                    type: "bar",
+                    label: {
+                        show: true,
+                        position: "top",
+                        margin: 8
+                    },
+                    data: data.map(item => {
+                        return {
+                            value: item.y,
+                            itemStyle: {
+                                color: colors(item.y)
+                            }
+                        }
+                    }),
+                },
+            ],
         };
     }, [data, title, subTitle])
 

@@ -74,8 +74,17 @@ const Home = () => {
                     </Card>
                 </Space>
             </div>
-            <Bar data={transformer(billStore.groupByDate(billType))} />
-            <Pie data={transformer(billStore.groupByClass(billType))} />
+            <div className={styles.monthBar}>
+                <Bar data={transformer(billStore.groupByDate(billType))} />
+            </div>
+            <div className={styles.cards}>
+                <Card bodyStyle={{ height: 400, width: 400 }}>
+                    <Pie
+                        title="本月消费分类"
+                        data={transformer(billStore.groupByClass(billType))}
+                    />
+                </Card>
+            </div>
         </div>
     )
 }

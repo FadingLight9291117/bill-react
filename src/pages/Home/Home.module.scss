@@ -9,4 +9,14 @@
     gap: 10px;
     align-items: flex-start;
   }
+
+  .monthBar {
+    height: 300px;
+  }
+
+  .cards {
+    display: flex;
+    flex-direction: row;
+    justify-content: right;
+  }
 }
