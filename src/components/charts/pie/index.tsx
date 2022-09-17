@@ -41,7 +41,7 @@ export default function Pie(props: IProps) {
             // },
             series: [
                 {
-                    // name: `${year}-${month}`,
+                    name: "金额",
                     type: "pie",
                     radius: ['40%', '70%'],
                     // roseType: "radius",

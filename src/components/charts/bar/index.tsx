@@ -48,6 +48,12 @@ export const Bar = (props: IProps) => {
             },
             series: [
                 {
+                    type: "bar",
+                    label: {
+                        show: true,
+                        position: "top",
+                        margin: 8
+                    }, 
                     data: data.map(item => {
                         return {
                             value: item.y,
@@ -56,12 +62,6 @@ export const Bar = (props: IProps) => {
                             }
                         }
                     }),
-                    type: "bar",
-                    label: {
-                        show: true,
-                        position: "top",
-                        margin: 8
-                    },
                 },
             ],
             tooltip: {

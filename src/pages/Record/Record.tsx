@@ -161,7 +161,7 @@ function Record() {
                     <Select
                         ref={clsRef}
                         style={{width: 120}}
-                        showSearch
+                        // showSearch
                         placeholder="类别"
                         optionFilterProp="children"
                         filterOption={(input, option) =>
@@ -180,7 +180,7 @@ function Record() {
                     {billType === BillType.consume && (
                         <Select
                             style={{width: 120}}
-                            showSearch
+                            // showSearch
                             placeholder="标签"
                             optionFilterProp="children"
                             filterOption={(input, option) =>
