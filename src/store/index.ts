@@ -34,8 +34,8 @@ export class Bill {
         return functions(this._bills)
     }
 
-    groupByClass(type?: BillType) {
-        const classFun = R.filter((bill: IBill) => R.of(bill.type).length === 0 || bill.type === type)
+    groupByClass(type?: BillType, date?: string) {
+        const classFun = R.filter((bill: IBill) => R.of(bill.type).length === 0 || bill.type === type && (date ? bill.date === date : true))
         const functions = R.compose(
             R.groupBy((bill: IBill) => bill.cls),
             classFun,

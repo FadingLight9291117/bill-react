@@ -6,7 +6,13 @@ import { useContext, useEffect, useState } from "react";
 import { BillContext } from "../../store";
 import { observer } from "mobx-react-lite";
 import Pie from "../../components/charts/pie";
-import { Card, DatePicker, Radio, Space } from "antd";
+import {
+    Card,
+    Modal,
+    DatePicker,
+    Radio,
+    Space,
+} from "antd";
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import dayjs from 'dayjs'
@@ -52,6 +58,14 @@ const Home = () => {
     ];
     const [billType, setBillType] = useState(BillType.consume)
 
+    // 点击bar弹出当天pie
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [modalTitle, setModalTitle] = useState("");
+    const [modalData, setModalData] = useState<{
+        x: string
+        y: number
+    }[]>([]);
+
     return (
         <div className={styles.home}>
             <div className={styles.total}>
@@ -75,16 +89,33 @@ const Home = () => {
                 </Space>
             </div>
             <div className={styles.monthBar}>
-                <Bar data={transformer(billStore.groupByDate(billType))} />
+                <Bar
+                    data={transformer(billStore.groupByDate(billType))}
+                    onClickItem={date => {
+                        setIsModalOpen(true)
+                        setModalTitle(date)
+                        setModalData(transformer(billStore.groupByClass(billType, date)))
+                    }}
+                />
             </div>
             <div className={styles.cards}>
-                <Card bodyStyle={{ height: 400, width: 400 }}>
+                <Card >
                     <Pie
                         title="本月消费分类"
                         data={transformer(billStore.groupByClass(billType))}
                     />
                 </Card>
             </div>
+            <Modal
+                visible={isModalOpen}
+                onOk={() => setIsModalOpen(false)}
+                onCancel={() => setIsModalOpen(false)}
+                title={modalTitle}
+            >
+                <Pie
+                    data={modalData}
+                />
+            </Modal>
         </div>
     )
 }

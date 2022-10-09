@@ -17,6 +17,7 @@ interface IProps {
     data: BarData[];
     title?: string;
     subTitle?: string;
+    onClickItem?: (date: string) => void;
 }
 
 export const Bar = (props: IProps) => {
@@ -84,9 +85,13 @@ export const Bar = (props: IProps) => {
         };
     }, [data, title, subTitle])
 
-
     const bar = useMemo(() => {
-        return chartRef.current ? echarts.init(chartRef.current, undefined, { renderer: "svg" }) : null;
+        const chart = chartRef.current ? echarts.init(chartRef.current, undefined, { renderer: "svg" }) : null;
+        chart?.on('click', (params) => {
+            const date = dayjs(props.data[0].x).format("YYYY-") + params.name
+            if (props.onClickItem) props.onClickItem(date)
+        })
+        return chart
     }, [chartRef.current])
 
     useEffect(() => {
