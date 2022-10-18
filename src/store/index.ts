@@ -43,6 +43,16 @@ export class Bill {
         return functions(this._bills)
     }
 
+    groupByLabelOfClass(className: string) {
+        const classFun = R.filter((bill: IBill) => R.of(bill.type).length === 0 || bill.cls === className)
+        const functions = R.compose(
+            R.groupBy((bill: IBill) => bill.label),
+            classFun,
+        )
+        return functions(this._bills)
+    }
+
+
     get listDailyMoney() {
         return this.groupByDate
     }

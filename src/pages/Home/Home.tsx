@@ -66,6 +66,10 @@ const Home = () => {
         y: number
     }[]>([]);
 
+    // 显示单个cls的饼状图，查看cls内部的label的消费情况，
+    // 这里有一个cls列表
+    const clsesForShow = ["餐饮", "恋爱"]
+
     return (
         <div className={styles.home}>
             <div className={styles.total}>
@@ -105,6 +109,16 @@ const Home = () => {
                         data={transformer(billStore.groupByClass(billType))}
                     />
                 </Card>
+                {
+                    clsesForShow.map(cls => {
+                        return (<Card>
+                            <Pie
+                                title={cls}
+                                data={transformer(billStore.groupByLabelOfClass(cls))}
+                            />
+                        </Card>)
+                    })
+                }
             </div>
             <Modal
                 visible={isModalOpen}

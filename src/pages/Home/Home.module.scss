@@ -15,8 +15,7 @@
   }
 
   .cards {
-    display: flex;
-    flex-direction: row;
-    justify-content: right;
+    display: grid;
+    grid: repeat(2, auto) / auto-flow auto;
   }
 }
