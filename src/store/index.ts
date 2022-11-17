@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { createContext } from "react";
-import { createBill, getBills, getClass } from "../api/bills";
+import { createBill, getBills, getLabels } from "../api/bills";
 import { BillType, IBill } from "../model";
 import * as R from "ramda"
 
@@ -10,11 +10,11 @@ import * as R from "ramda"
 export class Bill {
     private _bills: IBill[] = [];
     // _cls2label: IClass = {consume: new Map<string, string[]>(), income: []}
-    private _cls2label: { consume: Record<string, string[]>, income: [] } = { consume: {}, income: [] }
+    private _cls2label: { consume: [], income: [] } = { consume: [], income: [] }
 
     constructor() {
         makeAutoObservable(this)
-        this.fetchClass().then()
+        this.fetchLabels().then()
     }
 
     get bills() {
@@ -118,14 +118,26 @@ export class Bill {
     async fetch(year: number, month: number) {
         const data = await getBills(year, month)
         runInAction(() => {
-            this._bills = data
+            this._bills = data.map((data: any) => {
+                return {
+                    id: data.id,
+                    type: data.type.toLowerCase() === 'income' ? BillType.income : BillType.consume,
+                    date: data.date,
+                    money: data.money,
+                    cls: data.cls,
+                    label: data.label,
+                    options: data.options
+                }
+            })
         })
     }
 
-    async fetchClass() {
-        const cls2label = await getClass()
+    async fetchLabels() {
+        const cls2label = await getLabels()
         runInAction(() => {
-            this._cls2label = cls2label
+            if (cls2label.length > 0) {
+                this._cls2label == cls2label
+            }
         })
     }
 }

@@ -130,7 +130,7 @@ function Record() {
         setUploadLoading(false)
     }
 
-    let classData: string[]
+    let classData: string[] = []
     switch (billType) {
         case BillType.consume:
             classData = Object.keys(cls2label.consume)

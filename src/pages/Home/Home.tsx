@@ -111,7 +111,7 @@ const Home = () => {
                 </Card>
                 {
                     clsesForShow.map(cls => {
-                        return (<Card>
+                        return (<Card key={cls.toString()}>
                             <Pie
                                 title={cls}
                                 data={transformer(billStore.groupByLabelOfClass(cls))}
