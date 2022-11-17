@@ -135,9 +135,7 @@ export class Bill {
     async fetchLabels() {
         const cls2label = await getLabels()
         runInAction(() => {
-            if (cls2label.length > 0) {
-                this._cls2label == cls2label
-            }
+            this._cls2label == cls2label
         })
     }
 }
