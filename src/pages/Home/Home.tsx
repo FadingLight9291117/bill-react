@@ -53,10 +53,10 @@ const Home = () => {
     }
 
     const typeOpt = [
-        { label: '支出', value: BillType.consume },
-        { label: '收入', value: BillType.income },
+        { label: '支出', value: BillType.CONSUME },
+        { label: '收入', value: BillType.INCOME },
     ];
-    const [billType, setBillType] = useState(BillType.consume)
+    const [billType, setBillType] = useState(BillType.CONSUME)
 
     // 点击bar弹出当天pie
     const [isModalOpen, setIsModalOpen] = useState(false);

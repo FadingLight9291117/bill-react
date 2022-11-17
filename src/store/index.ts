@@ -73,7 +73,7 @@ export class Bill {
             (s: number) => s.toFixed(2),
             R.sum,
             R.map((bill: IBill) => bill.money),
-            R.filter((bill: IBill) => bill.type === BillType.consume),
+            R.filter((bill: IBill) => bill.type === BillType.CONSUME),
         )
         return functions(this._bills)
     }
@@ -84,16 +84,16 @@ export class Bill {
             (s: number) => s.toFixed(2),
             R.sum,
             R.map((bill: IBill) => bill.money),
-            R.filter((bill: IBill) => bill.type === BillType.income),
+            R.filter((bill: IBill) => bill.type === BillType.INCOME),
         )
         return functions(this._bills)
     }
 
     getTotalMoney(type?: BillType) {
         switch (type) {
-            case BillType.income:
+            case BillType.INCOME:
                 return this.incomeMoney
-            case BillType.consume:
+            case BillType.CONSUME:
                 return this.consumeMoney
             default:
                 return this.totalMoney
@@ -121,7 +121,7 @@ export class Bill {
             this._bills = data.map((data: any) => {
                 return {
                     id: data.id,
-                    type: data.type.toLowerCase() === 'income' ? BillType.income : BillType.consume,
+                    type: data.type.toUpperCase === 'INCOME' ? BillType.INCOME : BillType.CONSUME,
                     date: data.date,
                     money: data.money,
                     cls: data.cls,

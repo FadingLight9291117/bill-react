@@ -1,8 +1,8 @@
 import dayjs from 'dayjs'
 
 export enum BillType {
-    consume = 0,
-    income,
+    CONSUME = 0,
+    INCOME,
 }
 
 export interface IBill {
@@ -21,7 +21,7 @@ export function EmptyBill(): IBill {
     return {
         date: dayjs().format("YYYY-MM-DD"),
         money: 0,
-        type: BillType.consume,
+        type: BillType.CONSUME,
         cls: "",
         label: "",
         options: "",

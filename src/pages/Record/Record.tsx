@@ -50,7 +50,7 @@ function Record() {
             title: "金额",
             key: "money",
             render: (_: any, record: IBill) => {
-                const isConsume = record.type === BillType.consume
+                const isConsume = record.type === BillType.CONSUME
                 const color = isConsume ? "red" : "green"
                 const flag = isConsume ? "-" : "+"
                 return <Tag color={color}>{flag}{record.money}</Tag>
@@ -79,8 +79,8 @@ function Record() {
     const [datasource, setDataSource] = useState<IBill[]>([])
 
     const typeOpt = [
-        {label: '支出', value: BillType.consume},
-        {label: '收入', value: BillType.income},
+        {label: '支出', value: BillType.CONSUME},
+        {label: '收入', value: BillType.INCOME},
     ];
 
     // 提交到表格
@@ -93,7 +93,7 @@ function Record() {
         bill.money = Number(money)
         bill.options = options
         const checkBill = () => {
-            return bill.cls !== '' && (billType === BillType.income || bill.label !== '') && bill.money > 0
+            return bill.cls !== '' && (billType === BillType.INCOME || bill.label !== '') && bill.money > 0
         }
         const reset = () => {
             setCls("")
@@ -132,10 +132,10 @@ function Record() {
 
     let classData: string[] = []
     switch (billType) {
-        case BillType.consume:
+        case BillType.CONSUME:
             classData = Object.keys(cls2label.consume)
             break
-        case BillType.income:
+        case BillType.INCOME:
             classData = cls2label.income
             break
     }
@@ -170,14 +170,14 @@ function Record() {
                         value={cls === "" ? null : cls}
                         onChange={c => {
                             setCls(c)
-                            if (billType === BillType.consume) setLabel(cls2label.consume[c][0])
+                            if (billType === BillType.CONSUME) setLabel(cls2label.consume[c][0])
                         }}
                     >
                         {
                             classData.map(c => <Select.Option key={c} value={c}>{c}</Select.Option>)
                         }
                     </Select>
-                    {billType === BillType.consume && (
+                    {billType === BillType.CONSUME && (
                         <Select
                             style={{width: 120}}
                             // showSearch
