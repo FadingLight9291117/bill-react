@@ -3,6 +3,8 @@ import { createContext } from "react";
 import { createBill, getBills, getLabels } from "../api/bills";
 import { BillType, IBill } from "../model";
 import * as R from "ramda"
+import { BillLabel } from "./types";
+
 
 /**
  * 仅存储一个月的数据
@@ -10,7 +12,7 @@ import * as R from "ramda"
 export class Bill {
     private _bills: IBill[] = [];
     // _cls2label: IClass = {consume: new Map<string, string[]>(), income: []}
-    private _cls2label: { consume: [], income: [] } = { consume: [], income: [] }
+    private _cls2label: BillLabel = { consume: [], income: [] }
 
     constructor() {
         makeAutoObservable(this)
@@ -135,7 +137,7 @@ export class Bill {
     async fetchLabels() {
         const cls2label = await getLabels()
         runInAction(() => {
-            this._cls2label == cls2label
+            this._cls2label = cls2label
         })
     }
 }
