@@ -11,7 +11,7 @@ export async function getLabels() {
     return data.data
 }
 
-export async function createBill(bill: IBill) {
-    const data = await request.post(`/bill/`, bill)
+export async function postBills(bills: Array<IBill>) {
+    const data = await request.post(`/bill/`, bills)
     return data.data
 }

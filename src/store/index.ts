@@ -1,6 +1,6 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import { createContext } from "react";
-import { createBill, getBills, getLabels } from "../api/bills";
+import { postBills, getBills, getLabels } from "../api/bills";
 import { BillType, IBill } from "../model";
 import * as R from "ramda"
 import { BillLabel } from "./types";
@@ -110,7 +110,7 @@ export class Bill {
 
 
     async add(bill: IBill) {
-        const { id } = await createBill(bill)
+        const { id } = await postBills([bill])
         bill.id = id
         runInAction(() => {
             this._bills.push(bill);

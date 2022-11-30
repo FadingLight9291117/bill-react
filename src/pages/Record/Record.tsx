@@ -7,7 +7,7 @@ import { BillContext } from "../../store";
 import { observer } from "mobx-react-lite";
 import styles from "./Record.module.scss"
 import { BaseSelectRef } from "rc-select/lib/BaseSelect";
-import { createBill } from "../../api/bills";
+import { postBills } from "../../api/bills";
 
 
 function Record() {
@@ -117,16 +117,12 @@ function Record() {
     const [uploadLoading, setUploadLoading] = useState(false)
     const upload = async () => {
         setUploadLoading(true)
-        const failures = []
-        for (let bill of datasource) {
-            try {
-                const { id } = await createBill(bill)
-                if (!id) failures.push(bill)
-            } catch (e) {
-                failures.push(bill)
-            }
+        datasource.forEach( it => Reflect.deleteProperty(it, "key"))
+        try {
+            await postBills(datasource)
+            setDataSource([])
+        } catch (err) {
         }
-        setDataSource(failures)
         setUploadLoading(false)
     }
 
