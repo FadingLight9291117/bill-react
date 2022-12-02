@@ -28,6 +28,9 @@ function Record() {
         if (!!clsRef.current) clsRef.current.focus()
     }, [clsRef])
 
+    useEffect(() => {
+        billStore.fetchLabels().then()
+    }, [])
 
     // table
     const columns = [
@@ -117,7 +120,7 @@ function Record() {
     const [uploadLoading, setUploadLoading] = useState(false)
     const upload = async () => {
         setUploadLoading(true)
-        datasource.forEach( it => Reflect.deleteProperty(it, "key"))
+        datasource.forEach(it => Reflect.deleteProperty(it, "key"))
         try {
             await postBills(datasource)
             setDataSource([])

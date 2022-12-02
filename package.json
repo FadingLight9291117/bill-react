@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build && pwsh scripts/build.ps1",
+    "build": "tsc && vite build",
+    "deploy": "tsc && vite build && pwsh scripts/build.ps1",
     "preview": "vite preview"
   },
   "dependencies": {

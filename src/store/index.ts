@@ -16,7 +16,6 @@ export class Bill {
 
     constructor() {
         makeAutoObservable(this)
-        this.fetchLabels().then()
     }
 
     get bills() {

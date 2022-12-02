@@ -7,7 +7,7 @@ export default defineConfig({
   server: {
     proxy: {
       "/api/": {
-        target: "https://www.fadinglight.cn/api/",
+        target: "https://bill.fadinglight.cn/api/",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),
       }
